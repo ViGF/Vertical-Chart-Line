@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Chart Line</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+
+        button {
+            width: 8em;
+            height: 2.5em;
+            border-radius: 5%;
+            border: 0px;
+        }
+
+        .white-mode {
+            background-color: white;
+            filter: invert(100%);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myChart" width="245" height="595"></canvas>
+    <!--25 x 9 (canvas height) + 20 (right spacing for labelx) = 245-->
+    <!--23 x 25 (canvas height) + 20 (bottom spacing for labely) = 595-->
+    <button type="button" onclick="toggleMode()">Trocar Modo</button>
+    <script>
+        //Space between one line and another
+        let block = 25
+
+        //data to use in the chart
+        let data = [0, 25, 50, 75, 100, 150]
+        data = data.map((value) => value + block)
+
+        let labelx = [0, 25, 50, 75, 100, 125, 150, 175, 200]
+        let labely = [
+            0, 25, 50, 75, 100,
+            125, 150, 175, 200,
+            225, 250, 275, 300,
+            325, 350, 375, 400,
+            425, 450, 475, 500,
+            525, 550
+        ]
+
+        let canvas = document.getElementById('myChart')
+        let ctx = canvas.getContext("2d")
+
+        //Label and line style
+        ctx.font = "12px Verdana"
+        ctx.fillStyle = "white"
+        ctx.textAlign = "center"
+        ctx.strokeStyle = "white"
+
+        //Scrolls and draws the horizontal lines
+        for (i = block; i < 595; i += block) { //595 (Canvas HEIGHT)
+            ctx.moveTo(block, i)
+            ctx.lineTo(canvas.width - 20, i) //-20 (labelx spacing)
+            ctx.stroke()
+        }
+        labelx.forEach((value, index) => {
+            ctx.fillText(value, index * block + block, 16) //+ block (left spacing) 16 (top spacing)
+        })
+
+        labely.forEach((value, index) => {
+            ctx.fillText(value, 11, (index * block) + block + 4) //block + 4 (top spacing) 11 (left spacing)
+        })
+
+        //Scrolls and draws the vertical lines
+        for (i = block; i < 245; i += block) { //245 (Canvas WIDTH)
+            ctx.moveTo(i, block)
+            ctx.lineTo(i, canvas.height - 20) //-20 (labely spacing)
+            ctx.stroke()
+        }
+
+        //Draw the yellow line
+        ctx.beginPath()
+        ctx.lineWidth = 3
+        ctx.strokeStyle = "yellow"
+        ctx.moveTo(data[0], block)
+        for (let i = 0; i < data.length; i++) {
+            ctx.lineTo(data[i], i * block + block)
+        }
+        ctx.stroke()
+
+        //Toggle Mode
+        function toggleMode() {
+            let element = document.body
+            element.classList.toggle("white-mode")
+        }
+    </script>
+</body>
+
+</html>
